@@ -698,6 +698,40 @@ body {
   padding-right: 0.25rem;
 }
 
+/* Adire WhatsApp notice — gold-bordered callout inside the feature card */
+.dresscode__adire-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(201, 168, 76, 0.08);
+  border-left: 3px solid #C9A84C;
+  border-radius: 0 6px 6px 0;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.dresscode__adire-notice:hover {
+  background: rgba(201, 168, 76, 0.16);
+}
+.dresscode__adire-notice-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #25D366;
+  margin-top: 1px;
+}
+.dresscode__adire-notice span {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: #9A8E7E;
+  line-height: 1.6;
+}
+.dresscode__adire-notice span strong {
+  color: #1A1A2E;
+  font-weight: 600;
+}
+
 .dresscode__event-tag {
   display: block;
   font-family: var(--font-body);
