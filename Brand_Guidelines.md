@@ -4,7 +4,7 @@
 
 ## 1. Brand Identity
 
-**Subject:** Highly Esteemed Reverend Emeka Eze  
+**Subject:** Highly Esteemed Rev. Dr. Emeka Eze  
 **Event:** Birthday Celebration  
 **Aesthetic:** Luxury · Cinematic · Spiritual Elegance  
 **Tone:** Warm, reverent, celebratory — never casual or corporate

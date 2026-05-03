@@ -9,7 +9,7 @@
 
 ### Hero Identity
 
-- **Name:** Highly Reverend Emeka Eze
+- **Name:** Highly Esteemed Rev. Dr. Emeka Eze
 - **Overline:** A Birthday Celebration
 
 ### Event Dates
@@ -196,7 +196,7 @@ Getting Here
 ## Footer
 
 ```
-© 2026 · Highly Reverend Emeka Eze · Birthday Celebration
+© 2026 · Highly Esteemed Rev. Dr. Emeka Eze · Birthday Celebration
 With love & gratitude
 ```
 
