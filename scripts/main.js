@@ -182,6 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-page]").forEach((el) => {
       el.classList.toggle("nav-link--active", el.dataset.page === activePageId);
     });
+    updateNavStyle(activePageId);
+  }
+
+  // Apply solid nav background on non-home pages (desktop)
+  function updateNavStyle(pageId) {
+    document.querySelector(".site-nav").classList.toggle("nav--not-home", pageId !== "page-home");
   }
 
   // On first load: show the correct page based on the URL path
@@ -208,13 +214,33 @@ document.addEventListener("DOMContentLoaded", () => {
       clearProps: "clipPath",
     });
 
-    gsap.from(".hero__video", {
-      scale: 1.08,
+    // Portrait scale-in
+    gsap.from(".hero__portrait", {
+      scale: 1.06,
+      opacity: 0,
       duration: 1.6,
       ease: "power3.out",
     });
 
-    // Split hero heading
+    // Date badge — fade + slide from left
+    gsap.from(".hero__date-badge", {
+      x: -30,
+      opacity: 0,
+      duration: 0.9,
+      ease: "power3.out",
+      delay: 0.5,
+    });
+
+    // Overline
+    gsap.from(".hero__overline", {
+      y: 12,
+      opacity: 0,
+      duration: 0.7,
+      ease: "power2.out",
+      delay: 0.55,
+    });
+
+    // Name split reveal
     const split = new SplitType(".hero__name", { types: "lines" });
     split.lines.forEach((line) => {
       const wrap = document.createElement("div");
@@ -223,21 +249,17 @@ document.addEventListener("DOMContentLoaded", () => {
       line.parentNode.insertBefore(wrap, line);
       wrap.appendChild(line);
     });
-
+    gsap.set(split.lines, { y: "110%", opacity: 0 });
     gsap.to(split.lines, {
       y: 0,
       opacity: 1,
       duration: 0.9,
       stagger: 0.08,
       ease: "power3.out",
-      delay: 0.3,
+      delay: 0.65,
     });
 
-    gsap.from(
-      [".hero__overline", ".hero__rule", ".hero__date", ".hero__address"],
-      { y: 20, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power2.out", delay: 0.5 }
-    );
-
+    // Countdown blocks — stagger pop in
     gsap.from(".countdown-block", {
       scale: 0.8,
       opacity: 0,
@@ -246,6 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ease: "back.out(1.7)",
       delay: 0.9,
     });
+
   }
 
   function animateVenue() {
@@ -667,6 +690,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showRsvpSuccess() {
     const formEl    = document.getElementById("rsvp-form");
     const successEl = document.getElementById("rsvp-success");
+    const rsvpEl    = document.getElementById("rsvp");
 
     // Fade out the form
     gsap.to(formEl, {
@@ -674,6 +698,12 @@ document.addEventListener("DOMContentLoaded", () => {
       duration: 0.4,
       ease: "power2.in",
       onComplete: () => {
+        // Remove form from flow so the success card sits at the top of the section
+        formEl.style.display = "none";
+        // Centre the section now the form is gone
+        rsvpEl.classList.add("show-success");
+        // Scroll the section into view so the card is centred on screen
+        rsvpEl.scrollIntoView({ behavior: "smooth", block: "center" });
         // Reveal the in-page thank-you message
         gsap.fromTo(
           successEl,
@@ -687,6 +717,47 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast();
   }
 
+  // ── Duplicate email check (GET request — readable, no no-cors needed) ────
+  async function checkEmailRegistered(email) {
+    try {
+      const res  = await fetch(APPS_SCRIPT_URL + "?check_email=" + encodeURIComponent(email));
+      const json = await res.json();
+      return json.registered === true;
+    } catch {
+      return false; // on network error, allow the form to proceed normally
+    }
+  }
+
+  function showRsvpDuplicate() {
+    const modal = document.getElementById("duplicate-modal");
+    modal.classList.add("is-open");
+    gsap.fromTo(
+      modal.querySelector(".duplicate-modal__card"),
+      { opacity: 0, scale: 0.92, y: 16 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "power3.out" }
+    );
+    gsap.fromTo(
+      modal.querySelector(".duplicate-modal__backdrop"),
+      { opacity: 0 },
+      { opacity: 1, duration: 0.3, ease: "power2.out" }
+    );
+  }
+
+  function hideRsvpDuplicate() {
+    const modal = document.getElementById("duplicate-modal");
+    gsap.to(modal.querySelector(".duplicate-modal__card"), {
+      opacity: 0, scale: 0.94, y: 8, duration: 0.25, ease: "power2.in",
+    });
+    gsap.to(modal.querySelector(".duplicate-modal__backdrop"), {
+      opacity: 0, duration: 0.25, ease: "power2.in",
+      onComplete: () => modal.classList.remove("is-open"),
+    });
+  }
+
+  // Close modal on × button or backdrop click
+  document.getElementById("duplicate-modal-close").addEventListener("click", hideRsvpDuplicate);
+  document.getElementById("duplicate-modal-backdrop").addEventListener("click", hideRsvpDuplicate);
+
   // ── Form submission ──────────────────────────────────────────────────────
   const rsvpForm      = document.getElementById("rsvp-form");
   const submitBtn     = document.getElementById("rsvp-submit");
@@ -695,19 +766,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // TODO: Paste your Google Apps Script Web App URL here after deploying it.
   // It looks like: https://script.google.com/macros/s/XXXXXXXXXXXX/exec
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxHm0TZBeBFooKXX3jwpoZbHeW2NYFgrT40trmcWXdBiU5kJrXiF1SBxho7JX4rFG-S/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz78sMAQMH8WVfl9p6rnio8-OgeneskbGkHfSY91TT6vtcOzKYrq73QnVfNWOwYes1r/exec";
+
+  // Check for duplicate email as soon as the user leaves the email field
+  document.getElementById("rsvp-email").addEventListener("blur", async () => {
+    const email = document.getElementById("rsvp-email").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return; // skip if format is invalid
+    const registered = await checkEmailRegistered(email);
+    if (registered) showRsvpDuplicate();
+  });
 
   rsvpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!validateRsvpForm()) return;
+
+    // Safety net: catch duplicates that bypassed the blur check (e.g. autofill)
+    const emailVal = document.getElementById("rsvp-email").value.trim();
+    const isDuplicate = await checkEmailRegistered(emailVal);
+    if (isDuplicate) { showRsvpDuplicate(); return; }
 
     submitBtn.disabled    = true;
     submitBtn.textContent = "Sending\u2026";
     submitGroup.classList.remove("is-invalid");
     submitErrorEl.textContent = "";
 
-    // Gather checked events
-    const checkedEvents = [...document.querySelectorAll(".form__checkbox:checked")]
+    // Gather checked events (scoped to #group-events to exclude WhatsApp consent checkbox)
+    const checkedEvents = [...document.querySelectorAll("#group-events .form__checkbox:checked")]
       .map((cb) => cb.value);
 
     const payload = {
@@ -720,15 +804,17 @@ document.addEventListener("DOMContentLoaded", () => {
       events:                   checkedEvents.join(", "),
       adire_interest:           adireInput.value,
       attending_with_someone:   plusOneInput.value,
+      whatsapp_consent:         document.getElementById("rsvp-whatsapp-consent").checked ? "yes" : "no",
     };
 
     try {
-      // Google Apps Script requires no-cors mode because it returns an opaque response.
-      // We treat the fetch completing without a network error as success.
+      // Google Apps Script requires no-cors because it redirects and can't handle CORS preflight.
+      // Content-Type MUST be "text/plain" — "application/json" gets stripped under no-cors.
+      // The body is still valid JSON; doPost parses e.postData.contents as JSON.
       await fetch(APPS_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(payload),
       });
 
@@ -742,5 +828,124 @@ document.addEventListener("DOMContentLoaded", () => {
       submitErrorEl.textContent = "Something went wrong. Please check your connection and try again.";
     }
   });
+
+  // ─── 9. Image Lightbox ──────────────────────────────────────────────────────
+  (function initLightbox() {
+    const lightbox   = document.getElementById("lightbox");
+    const lbImg      = document.getElementById("lightbox-img");
+    const lbClose    = document.getElementById("lightbox-close");
+    const lbPrev     = document.getElementById("lightbox-prev");
+    const lbNext     = document.getElementById("lightbox-next");
+    const lbDotsWrap = document.getElementById("lightbox-dots");
+
+    let images  = [];   // array of { src, alt } for the current gallery
+    let current = 0;    // active index
+
+    // Build dot buttons
+    function buildDots(count) {
+      lbDotsWrap.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement("button");
+        dot.className = "lightbox__dot";
+        dot.setAttribute("aria-label", `Go to image ${i + 1}`);
+        dot.addEventListener("click", () => goTo(i));
+        lbDotsWrap.appendChild(dot);
+      }
+    }
+
+    function updateDots() {
+      lbDotsWrap.querySelectorAll(".lightbox__dot").forEach((dot, i) => {
+        dot.classList.toggle("is-active", i === current);
+      });
+    }
+
+    // Swap to a new image with a brief fade
+    function goTo(index) {
+      if (index === current && lbImg.src) return;
+      current = (index + images.length) % images.length;
+
+      lbImg.classList.add("is-changing");
+      setTimeout(() => {
+        lbImg.src = images[current].src;
+        lbImg.alt = images[current].alt;
+        lbImg.classList.remove("is-changing");
+        updateDots();
+      }, 180);
+    }
+
+    // Open the lightbox with a given gallery and starting index
+    function open(gallery, startIndex) {
+      images  = gallery;
+      current = startIndex;
+
+      lightbox.setAttribute("data-count", images.length);
+      buildDots(images.length);
+
+      lbImg.src = images[current].src;
+      lbImg.alt = images[current].alt;
+      updateDots();
+
+      lightbox.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+
+      // Animate in with GSAP
+      gsap.fromTo(
+        lbImg,
+        { scale: 0.92, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" }
+      );
+    }
+
+    function close() {
+      gsap.to(lbImg, {
+        scale: 0.92,
+        opacity: 0,
+        duration: 0.25,
+        ease: "power2.in",
+        onComplete: () => {
+          lightbox.classList.remove("is-open");
+          lbImg.src = "";
+          document.body.style.overflow = "";
+        },
+      });
+    }
+
+    // Bind gallery items — run once now and re-run if new images ever appear
+    function bindGalleryItems() {
+      document.querySelectorAll(".dresscode-gallery__strip").forEach((strip) => {
+        const items = strip.querySelectorAll(".dresscode-gallery__item img");
+        const gallery = Array.from(items).map((img) => ({
+          src: img.src,
+          alt: img.alt,
+        }));
+
+        items.forEach((img, idx) => {
+          if (img.dataset.lightboxBound) return;
+          img.dataset.lightboxBound = "1";
+          img.addEventListener("click", () => open(gallery, idx));
+        });
+      });
+    }
+    bindGalleryItems();
+    document.addEventListener("page:entered", bindGalleryItems);
+
+    // Controls
+    lbClose.addEventListener("click", close);
+    lbPrev.addEventListener("click", () => goTo(current - 1));
+    lbNext.addEventListener("click", () => goTo(current + 1));
+
+    // Click backdrop to close
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) close();
+    });
+
+    // Keyboard: arrow keys + Escape
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("is-open")) return;
+      if (e.key === "Escape")      close();
+      if (e.key === "ArrowLeft")   goTo(current - 1);
+      if (e.key === "ArrowRight")  goTo(current + 1);
+    });
+  })();
 
 });

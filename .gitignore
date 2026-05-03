@@ -1,0 +1,6 @@
+# Large media files — host externally (YouTube/Vimeo/CDN)
+assets/images/rev-birthday-vid.mp4
+
+# Reference/working files — not production code
+assets/reference img/
+assets/reference video/

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Highly Esteemed Rev Emeka Eze — Birthday Celebration</title>
-  <meta name="description" content="A special birthday celebration for Highly Esteemed Rev Emeka Eze.">
+  <title>Highly Esteemed Rev. Dr. Emeka Eze — Birthday Celebration</title>
+  <meta name="description" content="A special birthday celebration for Highly Esteemed Rev. Dr. Emeka Eze.">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="styles/main.css?v=9">
+  <link rel="stylesheet" href="styles/main.css?v=22">
 
   <!-- GSAP (Lenis removed — no long scroll page) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -35,6 +35,29 @@
     </div>
   </div>
 
+  <!-- Already-Registered Modal -->
+  <div class="duplicate-modal" id="duplicate-modal" role="dialog" aria-modal="true" aria-labelledby="duplicate-modal-title">
+    <div class="duplicate-modal__backdrop" id="duplicate-modal-backdrop"></div>
+    <div class="duplicate-modal__card">
+      <button class="duplicate-modal__close" id="duplicate-modal-close" aria-label="Close">&#10005;</button>
+      <div class="duplicate-modal__icon">&#10022;</div>
+      <h3 class="duplicate-modal__title" id="duplicate-modal-title">Already Registered</h3>
+      <p class="duplicate-modal__text">This email address has already been registered for the celebration.</p>
+      <p class="duplicate-modal__text duplicate-modal__text--sub">Please check your inbox for your ticket &mdash; it was sent when you first registered.<br>Also check your spam folder if you can&rsquo;t find it.</p>
+    </div>
+  </div>
+
+  <!-- Image Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox__close" id="lightbox-close" aria-label="Close">&times;</button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Previous image">&#8249;</button>
+    <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="Next image">&#8250;</button>
+    <div class="lightbox__stage">
+      <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+    </div>
+    <div class="lightbox__dots" id="lightbox-dots"></div>
+  </div>
+
   <!-- Cursor -->
   <div class="cursor" id="cursor">
     <div class="cursor__inner"></div>
@@ -42,12 +65,16 @@
 
   <!-- Preloader -->
   <div class="preloader" id="preloader">
-    <div class="preloader__logo">EE</div>
+    <div class="preloader__logo">
+      <img src="assets/images/logo/logo 2.png" alt="Imperial Royalty — Rev. Dr. Emeka Eze" />
+    </div>
   </div>
 
   <!-- Navigation -->
   <nav class="site-nav">
-    <a href="/" class="nav__logo" data-page="page-home">EE</a>
+    <a href="/" class="nav__logo" data-page="page-home">
+      <img src="assets/images/logo/logo 2.png" alt="Imperial Royalty — Rev. Dr. Emeka Eze" />
+    </a>
     <ul class="nav__links">
       <li><a href="/"         data-page="page-home">Home</a></li>
       <li><a href="/venue"    data-page="page-venue">Venue</a></li>
@@ -59,7 +86,7 @@
     </ul>
     <a href="/rsvp" class="nav__cta" data-page="page-rsvp">RSVP Now</a>
     <button class="nav__hamburger" aria-label="Menu">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6"  x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -92,55 +119,57 @@
   ════════════════════════════════════════════════════ -->
   <div class="page page--active" id="page-home">
     <section id="home" class="hero">
-      <div class="hero__bg">
-        <video
-          class="hero__video"
-          src="assets/images/rev-birthday-vid.mp4"
-          autoplay muted loop playsinline
-          aria-hidden="true"
-        ></video>
-        <div class="hero__overlay"></div>
+
+      <!-- Layer 1: Cut-out portrait — crossfade slideshow -->
+      <div class="hero__portrait-wrap" aria-hidden="true">
+        <img src="assets/images/hero image.png"  alt="Highly Esteemed Rev. Dr. Emeka Eze" class="hero__portrait hero__portrait--slide-1" />
+        <img src="assets/images/hero image2.png" alt="Highly Esteemed Rev. Dr. Emeka Eze" class="hero__portrait hero__portrait--slide-2" />
+        <img src="assets/images/hero image3.png" alt="Highly Esteemed Rev. Dr. Emeka Eze" class="hero__portrait hero__portrait--slide-3" />
+        <img src="assets/images/hero image4.png" alt="Highly Esteemed Rev. Dr. Emeka Eze" class="hero__portrait hero__portrait--slide-4" />
       </div>
 
-      <div class="hero__name-bg">EMEKA EZE</div>
+      <!-- Layer 2: Marquee watermark text — infinite horizontal scroll -->
+      <div class="hero__name-bg" aria-hidden="true">
+        <div class="hero__marquee-track">
+          <span>Highly Esteemed Rev. Dr. Emeka Eze&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span>Highly Esteemed Rev. Dr. Emeka Eze&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+      </div>
 
-      <div class="hero__content">
-        <span class="hero__overline">A Birthday Celebration</span>
-        <div class="hero__rule"></div>
+      <!-- Layer 3: Date badge — left side -->
+      <div class="hero__date-badge">
+        <span class="date-badge__month">MAY</span>
+        <span class="date-badge__days">21st, 22nd &amp; 24th</span>
+        <span class="date-badge__year">2026</span>
+      </div>
+
+      <!-- Layer 4: Content card — right side -->
+      <div class="hero__card">
+        <span class="hero__overline">Celebrating An Imperial Royalty</span>
         <h1 class="hero__name">
           <span>Highly Esteemed</span>
-          <span>Rev Emeka Eze</span>
+          <span>Rev. Dr. Emeka Eze</span>
         </h1>
-        <p class="hero__date">Thursday 21 &middot; Friday 22 &middot; Sunday 24 May 2026</p>
-        <p class="hero__address">Assemblies of God International Worship Centre, Abuja</p>
-      </div>
-
-      <div class="hero__countdown">
-        <div class="countdown-block">
-          <span class="countdown-num" id="cd-days">00</span>
-          <span class="countdown-label">Days</span>
-        </div>
-        <span class="countdown-dot">&middot;</span>
-        <div class="countdown-block">
-          <span class="countdown-num" id="cd-hrs">00</span>
-          <span class="countdown-label">Hrs</span>
-        </div>
-        <span class="countdown-dot">&middot;</span>
-        <div class="countdown-block">
-          <span class="countdown-num" id="cd-min">00</span>
-          <span class="countdown-label">Min</span>
-        </div>
-        <span class="countdown-dot">&middot;</span>
-        <div class="countdown-block">
-          <span class="countdown-num" id="cd-sec">00</span>
-          <span class="countdown-label">Sec</span>
+        <div class="hero__countdown">
+          <div class="countdown-block">
+            <span class="countdown-num" id="cd-days">00</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <div class="countdown-block">
+            <span class="countdown-num" id="cd-hrs">00</span>
+            <span class="countdown-label">Hrs</span>
+          </div>
+          <div class="countdown-block">
+            <span class="countdown-num" id="cd-min">00</span>
+            <span class="countdown-label">Min</span>
+          </div>
+          <div class="countdown-block">
+            <span class="countdown-num" id="cd-sec">00</span>
+            <span class="countdown-label">Sec</span>
+          </div>
         </div>
       </div>
 
-      <div class="hero__scroll-indicator">
-        <span class="scroll-text">Explore</span>
-        <div class="scroll-line"></div>
-      </div>
     </section>
   </div><!-- /#page-home -->
 
@@ -190,7 +219,7 @@
 
     <footer class="site-footer">
       <div class="footer__inner">
-        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev Emeka Eze &middot; Birthday Celebration</p>
+        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev. Dr. Emeka Eze &middot; Birthday Celebration</p>
         <p class="footer__tagline">With love &amp; gratitude</p>
       </div>
     </footer>
@@ -229,10 +258,11 @@
             <p class="card__location">Assemblies of God International Worship Centre, Abuja</p>
           </div>
 
-          <!-- Card 2 — RIGHT -->
-          <div class="schedule-card schedule-card--right">
+          <!-- Card 2 — RIGHT (Main Event) -->
+          <div class="schedule-card schedule-card--right schedule-card--main">
             <div class="timeline__dot"></div>
             <div class="card__connector"></div>
+            <span class="card__main-badge">Main Event Day</span>
             <span class="card__date">Friday, 22nd May 2026</span>
             <span class="card__time">12:00 PM</span>
             <h3 class="card__name">Birthday Celebration</h3>
@@ -255,7 +285,7 @@
 
     <footer class="site-footer">
       <div class="footer__inner">
-        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev Emeka Eze &middot; Birthday Celebration</p>
+        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev. Dr. Emeka Eze &middot; Birthday Celebration</p>
         <p class="footer__tagline">With love &amp; gratitude</p>
       </div>
     </footer>
@@ -280,24 +310,43 @@
           <span>&mdash;</span>
           <span>Birthday Theme</span>
         </div>
-        <h2 class="theme__big-type">
-          <span class="line-wrap"><span class="line-inner">LIGHT.</span></span>
-          <span class="line-wrap"><span class="line-inner">GOLD.</span></span>
-          <span class="line-wrap"><span class="line-inner">GLORY.</span></span>
-        </h2>
+        <div class="theme__marquee" aria-hidden="true">
+          <div class="theme__marquee-track">
+            <span>Celebrating An Imperial Royalty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>Celebrating An Imperial Royalty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          </div>
+        </div>
         <div class="theme__rule"></div>
       </div>
 
       <!-- Per-event Dress Codes -->
       <div class="theme__dresscode-events">
 
-        <div class="dresscode-event">
-          <span class="dresscode__event-tag">A Night of Lights &mdash; Thursday, 21st May</span>
-          <span class="dresscode__label">Dress Code</span>
-          <p class="dresscode__main">All That Glitters &middot; Customized Adire Fabric</p>
-          <p class="dresscode__sub">Guests are invited to shimmer and shine. If you are interested in the customized Adire fabric, kindly send a WhatsApp message to our host.</p>
+        <!-- Night of Lights — full-width feature card with image gallery -->
+        <div class="dresscode-event dresscode-event--feature">
+          <div class="dresscode-event__info">
+            <span class="dresscode__event-tag">A Night of Lights &mdash; Thursday, 21st May</span>
+            <span class="dresscode__label">Dress Code</span>
+            <p class="dresscode__main">All That Glitters &middot; Customized Adire Fabric</p>
+            <p class="dresscode__sub">Guests are invited to shimmer and shine mixing their outfit with the customized adire fabric.</p>
+          </div>
+          <div class="dresscode-event__gallery">
+            <div class="dresscode-gallery__strip">
+              <div class="dresscode-gallery__item">
+                <img src="assets/images/all that glitters 1.webp" alt="All That Glitters attire sample 1" />
+              </div>
+              <div class="dresscode-gallery__item">
+                <img src="assets/images/all that glitters 2.webp" alt="All That Glitters attire sample 2" />
+              </div>
+              <div class="dresscode-gallery__item">
+                <img src="assets/images/all that glitters 4.webp" alt="All That Glitters attire sample 4" />
+              </div>
+            </div>
+            <p class="dresscode-gallery__caption">Attire Inspiration</p>
+          </div>
         </div>
 
+        <!-- Two remaining cards side-by-side -->
         <div class="dresscode-event">
           <span class="dresscode__event-tag">Birthday Celebration &mdash; Friday, 22nd May</span>
           <span class="dresscode__label">Dress Code</span>
@@ -335,7 +384,7 @@
 
     <footer class="site-footer">
       <div class="footer__inner">
-        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev Emeka Eze &middot; Birthday Celebration</p>
+        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev. Dr. Emeka Eze &middot; Birthday Celebration</p>
         <p class="footer__tagline">With love &amp; gratitude</p>
       </div>
     </footer>
@@ -473,6 +522,14 @@
             <span class="form__error" id="error-plus-one"></span>
           </div>
 
+          <!-- WhatsApp consent -->
+          <div class="form__group form__group--consent" id="group-whatsapp-consent">
+            <label class="form__checkbox-label form__checkbox-label--consent">
+              <input type="checkbox" id="rsvp-whatsapp-consent" name="whatsapp_consent" class="form__checkbox" value="yes" />
+              <span>I agree to receive WhatsApp event reminders on the phone number provided above.</span>
+            </label>
+          </div>
+
           <div class="form__group" id="group-submit">
             <span class="form__error form__error--submit" id="error-submit"></span>
           </div>
@@ -486,15 +543,17 @@
         <div class="rsvp__success" id="rsvp-success">
           <div class="success__icon">&#10003;</div>
           <h3 class="success__title">You&rsquo;re Confirmed!</h3>
-          <p class="success__text">Thank you for responding. We look forward to celebrating with you.</p>
+          <p class="success__text">Thank you for responding. Your ticket has been sent to your email address — please check your inbox (and spam folder).</p>
+          <p class="success__text success__text--sub">We look forward to celebrating with you.</p>
         </div>
+
 
       </div>
     </section>
 
     <footer class="site-footer">
       <div class="footer__inner">
-        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev Emeka Eze &middot; Birthday Celebration</p>
+        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev. Dr. Emeka Eze &middot; Birthday Celebration</p>
         <p class="footer__tagline">With love &amp; gratitude</p>
       </div>
     </footer>
@@ -586,7 +645,7 @@
 
     <footer class="site-footer">
       <div class="footer__inner">
-        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev Emeka Eze &middot; Birthday Celebration</p>
+        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev. Dr. Emeka Eze &middot; Birthday Celebration</p>
         <p class="footer__tagline">With love &amp; gratitude</p>
       </div>
     </footer>
@@ -666,14 +725,14 @@
 
     <footer class="site-footer">
       <div class="footer__inner">
-        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev Emeka Eze &middot; Birthday Celebration</p>
+        <p class="footer__copy">&copy; 2026 &middot; Highly Esteemed Rev. Dr. Emeka Eze &middot; Birthday Celebration</p>
         <p class="footer__tagline">With love &amp; gratitude</p>
       </div>
     </footer>
   </div><!-- /#page-hotels -->
 
   <!-- JS -->
-  <script src="scripts/main.js?v=9"></script>
+  <script src="scripts/main.js?v=10"></script>
 
 </body>
 </html>
