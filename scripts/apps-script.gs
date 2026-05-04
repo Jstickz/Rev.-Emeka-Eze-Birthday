@@ -274,18 +274,36 @@ function generateTicketPDF(data, ticketId, qrBlob) {
   body.replaceText("\\{\\{EVENTS\\}\\}", eventsText);
   body.replaceText("\\{\\{DATE_LABEL\\}\\}", CONFIG.EVENT_DATES);
 
-  // Replace the {{QR_CODE}} placeholder with the actual QR image
-  // We search for a paragraph containing only the placeholder and swap it
-  var paragraphs = body.getParagraphs();
-  for (var i = 0; i < paragraphs.length; i++) {
-    var para = paragraphs[i];
-    if (para.getText().indexOf("{{QR_CODE}}") !== -1) {
-      // Insert the image right after this paragraph, then clear the placeholder
-      var img = body.insertImage(i + 1, qrBlob);
-      img.setWidth(120);
-      img.setHeight(120);
-      para.clear();
-      break;
+  // Replace the {{QR_CODE}} placeholder with the actual QR image.
+  // The placeholder lives inside a TABLE CELL, not a body-level paragraph,
+  // so we must iterate through tables → rows → cells to find it.
+  var numChildren = body.getNumChildren();
+  for (var c = 0; c < numChildren; c++) {
+    var child = body.getChild(c);
+    if (child.getType() !== DocumentApp.ElementType.TABLE) continue;
+    var table = child.asTable();
+    for (var r = 0; r < table.getNumRows(); r++) {
+      for (var col = 0; col < table.getRow(r).getNumCells(); col++) {
+        var cell = table.getRow(r).getCell(col);
+        if (cell.getText().indexOf("{{QR_CODE}}") === -1) continue;
+
+        // Found the cell — clear it and insert the QR image inline
+        cell.clear();
+        var imgPara = cell.insertParagraph(0, "");
+        imgPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        imgPara.appendInlineImage(qrBlob).setWidth(90).setHeight(90);
+
+        // Re-add the "Scan at entrance" note below the image
+        var notePara = cell.insertParagraph(1, "Scan at entrance");
+        notePara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+        var ns = {};
+        ns[DocumentApp.Attribute.FONT_FAMILY] = "Arial";
+        ns[DocumentApp.Attribute.FONT_SIZE] = 6;
+        ns[DocumentApp.Attribute.FOREGROUND_COLOR] = "#9A8E7E";
+        ns[DocumentApp.Attribute.ITALIC] = true;
+        ns[DocumentApp.Attribute.SPACING_BEFORE] = 4;
+        notePara.setAttributes(ns);
+      }
     }
   }
 

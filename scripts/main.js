@@ -766,7 +766,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // TODO: Paste your Google Apps Script Web App URL here after deploying it.
   // It looks like: https://script.google.com/macros/s/XXXXXXXXXXXX/exec
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqOvcPdA3NDsAUAcUIqWsUEPEqn8_UW-y0HSEBBT3YZCQZCqPG12KwTUQ2FmUN0xQn/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9u3I9iYFR95Q0JxwrMt7XaUYnUqBRDUVbqrF4rEW_vNrW-DXwNb83586krgVlL2GG/exec";
 
   // Check for duplicate email as soon as the user leaves the email field
   document.getElementById("rsvp-email").addEventListener("blur", async () => {
